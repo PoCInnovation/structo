@@ -32,14 +32,14 @@ export class AuthService {
       if (error instanceof ConflictException) {
         throw error;
       }
-      throw new Error('Erreur lors de la création du compte');
+      throw new Error('Error creating account');
     }
   }
 
   async login(loginDto: LoginDto) {
     const user = await this.validateUser(loginDto.email, loginDto.password);
     if (!user) {
-      throw new UnauthorizedException('Identifiants invalides');
+      throw new UnauthorizedException('Invalid credentials');
     }
     return this.generateTokens(user.id, user.email || '');
   }

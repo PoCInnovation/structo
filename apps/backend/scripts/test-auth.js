@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Script pour tester les fonctionnalités d'authentification
+ * Script to test authentication features
  */
 
 const http = require('http');
@@ -10,14 +10,14 @@ const http = require('http');
 const API_HOST = process.env.API_HOST || 'localhost';
 const API_PORT = process.env.API_PORT || 3001;
 
-// Données de test
+// Test data
 const TEST_USER = {
   fullName: 'Test User',
   email: 'test' + Date.now() + '@example.com',
   password: 'Password123!',
 };
 
-// Fonction pour faire une requête HTTP
+// Function to make HTTP request
 function request(method, path, data, token = null) {
   return new Promise((resolve, reject) => {
     const options = {
@@ -73,29 +73,29 @@ function request(method, path, data, token = null) {
 
 // Tests
 async function runTests() {
-  console.log("🧪 Démarrage des tests d'authentification");
+  console.log("🧪 Starting authentication tests");
   console.log('----------------------------------------');
 
   try {
-    // Test 1: Inscription
-    console.log(`👤 Test d'inscription avec email: ${TEST_USER.email}`);
+    // Test 1: Registration
+    console.log(`👤 Testing registration with email: ${TEST_USER.email}`);
     const registerResponse = await request('POST', '/auth/register', TEST_USER);
 
     if (
       registerResponse.statusCode === 201 ||
       registerResponse.statusCode === 200
     ) {
-      console.log('✅ Inscription réussie');
-      console.log('Token JWT reçu:', registerResponse.body.access_token);
+      console.log('✅ Registration successful');
+      console.log('JWT Token received:', registerResponse.body.access_token);
     } else {
-      console.log("❌ Échec de l'inscription:", registerResponse.statusCode);
+      console.log("❌ Registration failed:", registerResponse.statusCode);
       console.log(registerResponse.body);
     }
 
     console.log('----------------------------------------');
 
-    // Test 2: Connexion
-    console.log('🔐 Test de connexion');
+    // Test 2: Login
+    console.log('🔐 Testing login');
     const loginResponse = await request('POST', '/auth/login', {
       email: TEST_USER.email,
       password: TEST_USER.password,
@@ -103,27 +103,27 @@ async function runTests() {
 
     let authToken;
     if (loginResponse.statusCode === 200 || loginResponse.statusCode === 201) {
-      console.log('✅ Connexion réussie');
+      console.log('✅ Login successful');
       authToken = loginResponse.body.access_token;
-      console.log('Token JWT reçu:', authToken);
+      console.log('JWT Token received:', authToken);
     } else {
-      console.log('❌ Échec de la connexion:', loginResponse.statusCode);
+      console.log('❌ Login failed:', loginResponse.statusCode);
       console.log(loginResponse.body);
     }
 
     console.log('----------------------------------------');
 
-    // Test 3: Récupération du profil (requête authentifiée)
+    // Test 3: Profile retrieval (authenticated request)
     if (authToken) {
-      console.log('👤 Test de récupération du profil');
+      console.log('👤 Testing profile retrieval');
       const profileResponse = await request('GET', '/auth/me', null, authToken);
 
       if (profileResponse.statusCode === 200) {
-        console.log('✅ Récupération du profil réussie');
+        console.log('✅ Profile retrieval successful');
         console.log(profileResponse.body);
       } else {
         console.log(
-          '❌ Échec de la récupération du profil:',
+          '❌ Profile retrieval failed:',
           profileResponse.statusCode,
         );
         console.log(profileResponse.body);
@@ -131,11 +131,11 @@ async function runTests() {
     }
 
     console.log('----------------------------------------');
-    console.log('🏁 Tests terminés');
+    console.log('🏁 Tests completed');
   } catch (error) {
-    console.error('❌ Erreur durant les tests:', error.message);
+    console.error('❌ Error during tests:', error.message);
   }
 }
 
-// Exécuter les tests
+// Run tests
 runTests();

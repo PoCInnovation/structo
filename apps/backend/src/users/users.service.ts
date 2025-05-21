@@ -35,11 +35,11 @@ export class UsersService {
     password: string,
   ): Promise<Omit<User, 'password'>> {
     if (!email) {
-      throw new BadRequestException("L'email est requis");
+      throw new BadRequestException("Email is required");
     }
     const existingUser = await this.findByEmail(email);
     if (existingUser) {
-      throw new ConflictException('Un utilisateur avec cet email existe déjà');
+      throw new ConflictException('A user with this email already exists');
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = this.usersRepository.create({
